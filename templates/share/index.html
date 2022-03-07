@@ -1,0 +1,275 @@
+{% extends "share/base.html" %}
+{% load param_change %}
+
+{% block extra_head %}
+<style>
+    .message{
+        color:white;
+        padding:1rem;
+    }
+    .message_success{
+        background:forestgreen;
+    }
+    .message_error{
+        background:crimson;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+
+    <!--ここにニュースを表示する。誰が投稿したかなど。(セーブメソッドのオーバーライド)-->
+
+    {% for message in messages %}
+    <div class="message message_{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+
+    {% if request.user.is_authenticated %}
+    こんにちは
+    {% endif %}
+
+
+
+    <form class="my-3 border rounded p-3" method="POST" enctype="multipart/form-data">
+        <h2>ファイルアップロードフォーム</h2>
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col-sm-6"><input class="form-control-file" type="file" name="content" required></div>
+            <div class="col-sm-6"><input class="form-control" type="text" name="name" placeholder="ファイル名" required></div>
+        </div>
+        <input class="form-control btn btn-outline-success my-1" type="submit" value="送信">
+    </form>
+
+    <form class="my-3 border rounded p-3" action="" method="GET">
+        <h2>ファイル検索</h2>
+        <div class="input-group">
+            <input class="form-control" type="text" name="search" placeholder="キーワード検索" value="{{ request.GET.search }}">
+            <div class="input-group-append">
+                <input class="form-control btn btn-outline-primary" type="submit" value="検索">
+            </div>
+        </div>
+    </form>
+
+    <form class="my-3 border rounded p-3" action="" method="GET">
+        <h2>年月検索</h2>
+        <div class="form-inline">
+            <select class="form-control" name="year">
+                {% for y in year_list %}
+                <option value="{{ y }}">{{ y }}年</option>
+                {% endfor %}
+            </select>
+            <select class="form-control" name="month">
+                {% for m in month_list %}
+                <option value="{{ m }}" {% if request.GET.month == m %}selected{% endif %}>{{ m }}月</option>
+                {% endfor %}
+            </select>
+            <input class="form-control btn btn-outline-primary" type="submit" value="検索">
+        </div>
+
+    </form>
+
+
+
+    {% for document in documents %}
+    <div class="border">
+        <div>{{document.dt}}</div>
+        <div>{{ document.mime|default:"MIME不明" }}</div>
+        {% if document.user %}
+        <div>投稿者:{{ document.user.last_name }}{{ document.user.first_name }}</div>
+        {% else %}
+        <div>この投稿者は存在しません</div>
+        {% endif %}
+        <div>
+            {% comment %}
+
+            {% if document.mime == "image/jpeg" %}
+
+            {# 画像 #}
+            <i class="fa-solid fa-file-image"></i>
+            <img src="{{ document.thumbnail.url }}" alt="">
+
+            {% elif document.mime == "application/zip" %}
+            {# その他のファイル( MIME=zip ) #}
+            <i class="fa-solid fa-file"></i>
+
+            {% elif document.mime == "video/mp4" %}
+            {# MP4 #}
+            <i class="fa-solid fa-file-video"></i>
+
+            {% elif document.mime == "application/pdf" %}
+            {# PDF #}
+            <i class="fa-solid fa-file-pdf"></i>
+            {% endif %}
+
+            {% endcomment %}
+
+            <a href="{{ document.content.url }}">{{document.name}}をダウンロード({{ document.content }})</a>
+        </div>
+        <div>
+            <a href="{% url 'share:single' document.id %}">このドキュメントの詳細を見る</a>
+
+            {% comment %}
+            <a href="{% url 'share:single' document.id %}">
+                {# mimeがjpegの場合は画像を表示、それ以外の場合はmimeに応じてアイコン画像を表示させる #}
+                {% if document.thumbnail %}
+                <img src="{{ document.thumbnail.url }}" alt="サムネイル">
+                {% endif %}
+            </a>
+            {% endcomment %}
+        </div>
+    </div>
+    {% endfor %}
+
+
+<ul class="pagination justify-content-center">
+    {% if documents.has_previous %}
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' documents.previous_page_number %}">前のページ</a></li>
+    {# <li class="page-item"><a class="page-link" href="?page={{ documents.previous_page_number }}">前のページ</a></li> #}
+    {% else %}
+    <li class="page-item"><a class="page-link">前のページ</a></li>
+    {% endif %}
+    <li class="page-item"><a class="page-link">{{ documents.number }}</a></li>
+    {% if documents.has_next %}
+    {# <li class="page-item"><a class="page-link" href="?page={{ documents.next_page_number }}">次のページ</a></li> #}
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' documents.next_page_number %}">次のページ</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link">次のページ</a></li>
+    {% endif %}
+</ul>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}
+
+{% load param_change %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>簡易掲示板</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+<style>
+    .message{
+        color:white;
+        padding:1rem;
+    }
+    .message_success{
+        background:forestgreen;
+    }
+    .message_error{
+        background:crimson;
+    }
+</style>
+</head>
+<body>
+
+    <!--ここにニュースを表示する。誰が投稿したかなど。(セーブメソッドのオーバーライド)-->
+
+    {% for message in messages %}
+    <div class="message message_{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    <!--ログアウトのリンク設置する。-->
+    <a href="{% url 'logout' %}">ログアウト</a>
+    <p>パスワードを変更は<a href="{% url 'password_change' %}">こちら</a></p>
+
+    {% if request.user.is_authenticated %}
+    こんにちは
+    {% endif %}
+
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!--
+            type属性にはinputタグのタイプを指定する。fileやtext、checkboxなど
+            name属性にはモデルのフィールド名を指定する。
+            placeholder属性にはテキストボックスに指定したい記入例を指定する。
+
+            HTMLの属性入力は、","で区切らない。スペースで区切る。
+        -->
+        <!--
+            <input type="file", name="content">
+            <input type="name", name="ファイル名",placeholder="ファイル名">
+        -->
+
+        <input type="file" name="content">
+        <input type="text" name="name" placeholder="ファイル名">
+
+        <input type="submit" value="送信">
+    </form>
+
+    <form action="" method="GET">
+        <input type="text" name="search" placeholder="キーワード検索" value="{{ request.GET.search }}">
+        <input type="submit" value="検索">
+    </form>
+
+
+
+
+    {% for document in documents %}
+    <div class="border">
+        <div>{{document.dt}}</div>
+        <div>{{ document.mime|default:"MIME不明" }}</div>
+        {% if document.user %}
+        <div>投稿者:{{ document.user.last_name }}{{ document.user.first_name }}</div>
+        {% else %}
+        <div>この投稿者は存在しません</div>
+        {% endif %}
+        <div>
+            <a href="{{ document.content.url }}">{{document.name}}をダウンロード</a>
+        </div>
+        <div>
+            <a href="{% url 'share:single' document.id %}">このドキュメントの詳細を見る</a>
+
+            <a href="{% url 'share:single' document.id %}">
+                {# mimeがjpegの場合は画像を表示、それ以外の場合はmimeに応じてアイコン画像を表示させる #}
+                <img src="" alt="jpeg">
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+
+
+<ul class="pagination justify-content-center">
+    {% if documents.has_previous %}
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' documents.previous_page_number %}">前のページ</a></li>
+    {# <li class="page-item"><a class="page-link" href="?page={{ documents.previous_page_number }}">前のページ</a></li> #}
+    {% else %}
+    <li class="page-item"><a class="page-link">前のページ</a></li>
+    {% endif %}
+    <li class="page-item"><a class="page-link">{{ documents.number }}</a></li>
+    {% if documents.has_next %}
+    {# <li class="page-item"><a class="page-link" href="?page={{ documents.next_page_number }}">次のページ</a></li> #}
+    <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' documents.next_page_number %}">次のページ</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link">次のページ</a></li>
+    {% endif %}
+</ul>
+
+</body>
+</html>
+{% endcomment %}

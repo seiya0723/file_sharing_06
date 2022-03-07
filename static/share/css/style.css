@@ -1,0 +1,141 @@
+body{
+}
+
+a:hover{
+    color:white;
+    text-decoration:none;
+}
+
+/* header */
+.header_area{
+    display:flex;
+    background:navy;
+}
+.header_content_left{
+    width:calc(100% - 5rem);
+}
+.header_content_right{
+    width:5rem;
+}
+.header_title{
+    font-size:2rem;
+    font-weight:bold;
+    color:white;
+}
+.header_link{
+    font-size:2rem;
+    color:white;
+}
+
+
+
+
+
+
+
+/* star form */
+input[type="radio"]{
+    display:none;
+}
+
+.star_radio_label_area {
+    display:inline-block;
+}
+.star_radio_label_flex {
+    display:flex;
+    flex-direction: row-reverse;
+}
+.star_radio_label{
+    cursor:pointer;
+    font-size:3rem;
+}
+.true_star {
+    display:none;
+    color:orange;
+}
+.false_star {
+    color:gray;
+}
+
+
+/* ホバーをしたときの装飾 */
+/* ~ はそれ以降に書いてある兄弟要素を指定する。今回54321にしたのは、ホバーが聞いてくれないから。 */
+label[for="star_radio_1"]:hover > .true_star{ display:inline-block; }
+label[for="star_radio_1"]:hover > .false_star{ display:none; }
+
+label[for="star_radio_2"]:hover > .true_star ,
+label[for="star_radio_2"]:hover ~ label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+label[for="star_radio_2"]:hover > .false_star,
+label[for="star_radio_2"]:hover ~ label[for="star_radio_1"] > .false_star{ display:none; }
+
+label[for="star_radio_3"]:hover > .true_star ,
+label[for="star_radio_3"]:hover ~ label[for="star_radio_2"] > .true_star ,
+label[for="star_radio_3"]:hover ~ label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+label[for="star_radio_3"]:hover > .false_star,
+label[for="star_radio_3"]:hover ~ label[for="star_radio_2"] > .false_star,
+label[for="star_radio_3"]:hover ~ label[for="star_radio_1"] > .false_star{ display:none; }
+
+label[for="star_radio_4"]:hover > .true_star ,
+label[for="star_radio_4"]:hover ~ label[for="star_radio_3"] > .true_star ,
+label[for="star_radio_4"]:hover ~ label[for="star_radio_2"] > .true_star ,
+label[for="star_radio_4"]:hover ~ label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+label[for="star_radio_4"]:hover > .false_star,
+label[for="star_radio_4"]:hover ~ label[for="star_radio_3"] > .false_star,
+label[for="star_radio_4"]:hover ~ label[for="star_radio_2"] > .false_star,
+label[for="star_radio_4"]:hover ~ label[for="star_radio_1"] > .false_star{ display:none; }
+
+label[for="star_radio_5"]:hover > .true_star ,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_4"] > .true_star ,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_3"] > .true_star ,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_2"] > .true_star ,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+label[for="star_radio_5"]:hover > .false_star,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_4"] > .false_star,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_3"] > .false_star,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_2"] > .false_star,
+label[for="star_radio_5"]:hover ~ label[for="star_radio_1"] > .false_star{ display:none; }
+
+
+/* チェックされたときの装飾 矩形選択を使用して編集する */
+#star_radio_1[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .true_star{ display:inline-block; }
+#star_radio_1[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .false_star{ display:none; }
+
+#star_radio_2[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .true_star ,
+#star_radio_2[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+#star_radio_2[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .false_star,
+#star_radio_2[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .false_star{ display:none; }
+
+#star_radio_3[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_3"] > .true_star ,
+#star_radio_3[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .true_star ,
+#star_radio_3[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+#star_radio_3[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_3"] > .false_star,
+#star_radio_3[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .false_star,
+#star_radio_3[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .false_star{ display:none; }
+
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_4"] > .true_star ,
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_3"] > .true_star ,
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .true_star ,
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_4"] > .false_star,
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_3"] > .false_star,
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .false_star,
+#star_radio_4[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .false_star{ display:none; }
+
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_5"] > .true_star ,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_4"] > .true_star ,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_3"] > .true_star ,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .true_star ,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .true_star { display:inline-block; }
+
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_5"] > .false_star,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_4"] > .false_star,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_3"] > .false_star,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_2"] > .false_star,
+#star_radio_5[type="radio"]:checked ~ .star_radio_label_area > .star_radio_label_flex > label[for="star_radio_1"] > .false_star{ display:none; }
